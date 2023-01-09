@@ -9,39 +9,11 @@ class ProductController extends Controller
 {
 
     public function edit($id){
-        $data = DB::table('product')->where('id_product',$id);
+        $data = DB::table('product')->where('id_product',$id)->leftJoin('category', 'category.id', '=', 'product.category_id');
         $data = $data->get();
         //dd($data);
         return view('admin.pages.product.editProduct',compact('data'));
      }
-
-    //  public function updatedata(Request $req, $id) {
-    //     $product -> id_product = $req->input('id_product');
-    //     $product -> title = $req->input('title');
-    //     $product -> price = $req->input('price');
-    //     $product -> discount = $req->input('discount');
-    //     $product -> description = $req->input('description');
-
-    //     $product -> save();
-    //     return redirect()->route('admin.productList');
-    // }
-
-    public function updatedata(Request $req,$id) {
-        $id = $req->input('id_product');
-        $name = $req->input('title');
-        $price = $req->input('price');
-        $discount = $req->input('discount');
-        $description = $req->input('description');
-
-        $data = array('title'=>$name,'price'=>$price,'discount'=>$discount,'description'=>$description) ;
-        //DB::table('product')->where('id_product',$id)->update($data);
-        DB::table('users')->where('id_product',$id)->update(array($data));
-        //dd($req->all());
-        //$data->save($req->all());
-        return redirect()->route('admin.productList');
-    }
-
-
 
     /**
      * Display a listing of the resource.
@@ -50,8 +22,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-
-        $data = DB::table('product')->select('*');
+        $data = DB::table('product')->select('*')->leftJoin('category', 'category.id', '=', 'product.category_id');
+        //$data = DB::table('product')->select('*');
         $data = $data->get();
         //dd($data);
         return view('admin.pages.product.productList',compact('data'));
@@ -99,7 +71,26 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $id_product = $request->input('id_product');
+        $name = $request->input('title');
+        $price = $request->input('price');
+        $discount = $request->input('discount');
+        $description = $request->input('description');
+        $category_name = $request->input('category_name');
+        $thumbnail = $request->input('thumbnail');
+
+        if($request->hasFile('image')){
+            $request->file('image')->move('backend/img/', $request->file('image')->getClientOriginalName());
+            $thumbnail = $request->file('image')->getClientOriginalName();
+            //$data->save();
+        }
+
+        $data = array('id_product' => $id_product,'title'=>$name,'price'=>$price,'discount'=>$discount,'description'=>$description,
+        'thumbnail'=>$thumbnail,'category_name'=>$category_name) ;
+        DB::table('product')->where('id_product',$id_product)->leftJoin('category', 'category.id', '=', 'product.category_id')->update($data);
+        dd($request->all());
+        return redirect()->route('admin.productList');
+        
     }
 
     /**
@@ -110,6 +101,8 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data =  DB::table('product')->where('id_product',$id);
+        $data->delete();
+        return redirect()->route('admin.productList');
     }
 }
