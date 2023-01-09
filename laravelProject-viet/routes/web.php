@@ -20,7 +20,8 @@ use Illuminate\Support\Facades\Route;
  * nhóm route cho admin
  * 
  */
-Route::post('updatedata/{id}','App\Http\Controllers\ProductController@updatedata')->name('updatedata');
+Route::post('updatedata/{id_product}','App\Http\Controllers\ProductController@update')->name('updatedata');
+Route::get('delete/{id}','App\Http\Controllers\ProductController@destroy')->name('delete');
 
 Route::prefix('admin')->group(function () {
     Route::get('/', function () {

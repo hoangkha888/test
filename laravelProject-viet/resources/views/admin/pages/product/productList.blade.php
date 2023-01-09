@@ -35,6 +35,7 @@
                                 <th>Product</th>
                                 <th>id</th>
                                 <th>Name</th>
+                                <th>Category</th>
                                 <th>Price</th>
                                 <th>Discount</th>
                                 <th>Description</th>
@@ -48,6 +49,7 @@
                                     <td><img class="tbl-thumb" src="{{ asset('backend/img/'.$row->thumbnail) }}" alt="Product Image" /></td>
                                     <td>{{$row->id_product}}</td>
                                     <td>{{$row->title}}</td>
+                                    <td>{{$row->category_name}}</td>
                                     <td>{{$row->price}}</td>
                                     <td>{{$row->discount}} %</td>
                                     <td>{{$row->description}}</td>
@@ -64,7 +66,7 @@
 
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="{{ route('admin.product.edit',$row->id_product) }}">Edit</a>
-                                                <a class="dropdown-item" href="#">Delete</a>
+                                                <a class="dropdown-item" href="/delete/{{$data[0]->id_product}}">Delete</a>
                                             </div>
                                         </div>
                                     </td>
